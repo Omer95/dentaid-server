@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, Response
 import os
 import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 import firebase_admin
 from firebase_admin import credentials, storage
 import json
