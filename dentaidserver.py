@@ -28,10 +28,11 @@ def hello():
         # upload image to firebase storage bucket
         blob = bucket.blob('opgclient/' + payload.get('filename')) 
         blob.upload_from_filename('./temp.jpg')
+        print('image: ' + payload.get('filename') + ' uploaded to firebase storage')
         return jsonify({
             "response": "Image received and uploaded to firebase"
         })
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=80)
