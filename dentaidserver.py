@@ -3,7 +3,7 @@ import os
 import numpy as np
 import cv2
 import firebase_admin
-from firebase_admin import credentials, storage
+from firebase_admin import credentials, storage, db
 import json
 import base64
 #init app
@@ -11,7 +11,8 @@ app = Flask(__name__)
 # init firebase admin and storage bucket
 cred = credentials.Certificate('./dentaid-diagnostics-firebase-adminsdk-vx454-8291a3a57e.json')
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'dentaid-diagnostics.appspot.com'
+    'storageBucket': 'dentaid-diagnostics.appspot.com',
+    'databaseURL': 'https://dentaid-diagnostics.firebaseio.com/'
 })
 bucket = storage.bucket()
 
@@ -29,6 +30,9 @@ def hello():
         blob = bucket.blob('opgclient/' + payload.get('filename')) 
         blob.upload_from_filename('./temp.jpg')
         print('image: ' + payload.get('filename') + ' uploaded to firebase storage')
+        # set filename in realtime database
+        ref = db.reference('/opgclient')
+        ref.push({'filename': payload.get('filename')})
         return jsonify({
             "response": "Image received and uploaded to firebase"
         })
